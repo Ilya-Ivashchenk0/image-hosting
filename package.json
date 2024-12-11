@@ -1,0 +1,38 @@
+{
+  "name": "image-hosting",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "tsc && node dist/app.js",
+    "dev": "npx eslint . --fix && npx nodemon --watch \"src/**/*.ts\" --exec \"ts-node\" app.ts",
+    "lint": "eslint .",
+    "fix": "prettier --write ."
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@fastify/cors": "^10.0.1",
+    "@fastify/multipart": "^9.0.1",
+    "@fastify/rate-limit": "^10.2.1",
+    "@fastify/static": "^8.0.3",
+    "dotenv": "^16.4.7",
+    "fastify": "^5.1.0",
+    "fastify-plugin": "^5.0.1",
+    "sharp": "^0.33.5",
+    "uuid": "^11.0.3"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^8.18.0",
+    "@typescript-eslint/parser": "^8.18.0",
+    "eslint": "^9.16.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "nodemon": "^3.1.7",
+    "prettier": "^3.4.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.2",
+    "typescript-eslint": "^8.18.0"
+  }
+}
