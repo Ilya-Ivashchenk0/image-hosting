@@ -3,8 +3,8 @@ dotenv.config()
 
 export const config = {
   nodeEnv: process.env.NODE_ENV || 'development',
-  port: Number(process.env.PORT || 3000),
-  host: process.env.HOST,
+  port: Number(process.env.PORT || 3666),
+  host: process.env.NODE_ENV === 'development' ? 'localhost:3666' : process.env.HOST,
   serverConfig: {
     logger: {
       base: {

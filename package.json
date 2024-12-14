@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "tsc && node dist/app.js",
+    "start": "node dist/app.js",
+    "build": "tsc",
     "dev": "npx eslint . --fix && npx nodemon --watch \"src/**/*.ts\" --exec \"ts-node\" app.ts",
     "lint": "eslint .",
     "fix": "prettier --write ."

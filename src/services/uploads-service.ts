@@ -15,22 +15,36 @@ const streamToBuffer = (stream: Readable): Promise<Buffer> =>
     stream.on('error', reject)
   })
 
+const processFile = async (file: MultipartFile) => {
+  const fileId = uuidv4()
+  const fileExtension = path.extname(file.filename)
+  const filePath = path.join(uploadDir, `${fileId}${fileExtension}`)
+
+  console.log(`Saving file to: ${filePath}`)
+
+  const fileBuffer = await streamToBuffer(file.file)
+
+  await sharp(fileBuffer).toFile(filePath)
+
+  return `${config.host}/images/${fileId}${fileExtension}`
+}
+
 export const uploadsService = {
   uploadImage: async (file: MultipartFile) => {
     try {
-      const fileId = uuidv4()
-      const fileExtension = path.extname(file.filename)
-      const filePath = path.join(uploadDir, `${fileId}${fileExtension}`)
-
-      console.log(`Saving file to: ${filePath}`)
-
-      const fileBuffer = await streamToBuffer(file.file)
-
-      await sharp(fileBuffer).toFile(filePath)
-
-      return `${config.host}/images/${fileId}${fileExtension}`
+      return { url: await processFile(file) }
     } catch (err) {
       console.log(err)
+      throw err
+    }
+  },
+  uploadImages: async (files: MultipartFile[]) => {
+    try {
+      const results = await Promise.all(files.map(file => processFile(file)))
+      return results
+    } catch (err) {
+      console.log(err)
+      throw err
     }
   }
 }

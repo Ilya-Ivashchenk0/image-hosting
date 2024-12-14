@@ -1,0 +1,36 @@
+services:
+  app:
+    container_name: app_container
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3666:3666"
+    volumes:
+      - images:/app/images
+    environment:
+      NODE_ENV: ${NODE_ENV}
+      PORT: ${PORT}
+      HOST: ${HOST}
+    restart: always
+    networks:
+      - mynetwork
+
+  nginx:
+    container_name: nginx_container
+    image: nginx:latest
+    ports:
+      - "80:80"
+    build: ./nginx/
+    depends_on:
+      - app
+    restart: always
+    networks:
+      - mynetwork
+
+volumes:
+  images:
+
+networks:
+  mynetwork:
+    driver: bridge

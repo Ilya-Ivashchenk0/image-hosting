@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Загрузка изображений</title>
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@babel/standalone/babel.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const App = () => {
+      const [isMultiple, setIsMultiple] = React.useState(false);
+      const [uploadedLinks, setUploadedLinks] = React.useState([]);
+      const fileInputRef = React.useRef(null);
+
+      const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        const formData = new FormData();
+        const files = fileInputRef.current.files;
+
+        for (let i = 0; i < files.length; i++) {
+          formData.append(isMultiple ? 'files' : 'file', files[i]);
+        }
+
+        const endpoint = isMultiple
+          ? 'http://localhost:3666/api/upload/multiple'
+          : 'http://localhost:3666/api/upload';
+
+        try {
+          const response = await fetch(endpoint, {
+            method: 'POST',
+            body: formData,
+          });
+
+          const data = await response.json();
+          const links = isMultiple ? data.data : [data.url];
+          setUploadedLinks(links);
+          console.log(data);
+        } catch (error) {
+          console.error(error);
+        }
+      };
+
+      const handleCopyLink = (link) => {
+        navigator.clipboard.writeText(link).then(() => {
+          alert('Ссылка скопирована');
+        });
+      };
+
+      return (
+        <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+          <h1 className="text-2xl font-bold mb-4">Загрузить изображения</h1>
+
+          {uploadedLinks.length > 0 ? (
+            <div className="mt-4 space-y-4">
+              {uploadedLinks.map((link, index) => (
+                <div key={index} className="border p-4 rounded-lg">
+                  <img src={`http://${link}`} alt="Preview" className="w-full h-auto mb-2" />
+                  <div className="flex justify-between items-center">
+                    <a href={link} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+                      {link}
+                    </a>
+                    <button
+                      onClick={() => handleCopyLink(link)}
+                      className="bg-blue-600 text-white py-1 px-2 rounded-lg hover:bg-blue-700"
+                    >
+                      Копировать
+                    </button>
+                  </div>
+                </div>
+              ))}
+              <button
+                onClick={() => setUploadedLinks([])}
+                className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700"
+              >
+                Загрузить снова
+              </button>
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label className="flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  checked={isMultiple}
+                  onChange={() => setIsMultiple(!isMultiple)}
+                  className="form-checkbox h-5 w-5 text-blue-600"
+                />
+                <span>Загрузить несколько файлов</span>
+              </label>
+            </div>
+            <div>
+              <input
+                ref={fileInputRef}
+                type="file"
+                name={isMultiple ? 'files' : 'file'}
+                multiple={isMultiple}
+                required
+                className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+              />
+            </div>
+            <button
+              type="submit"
+              className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700"
+            >
+              Загрузить
+            </button>
+          </form>
+          )}
+        </div>
+      );
+    };
+
+    ReactDOM.render(<App />, document.getElementById('root'));
+  </script>
+</body>
+</html>
