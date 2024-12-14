@@ -50,6 +50,7 @@
 
 ## Используемые технологии
 
+ - Docker
  - typescript
 
  - Fastify
