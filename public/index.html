@@ -30,7 +30,7 @@
 
         const endpoint = isMultiple
           ? 'http://localhost:3666/api/upload/multiple'
-          : 'http://localhost:3666/api/upload';
+          : 'http://localhost:3666/api/upload/one';
 
         try {
           const response = await fetch(endpoint, {
