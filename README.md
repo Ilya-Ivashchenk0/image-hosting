@@ -7,7 +7,7 @@
 1. Клонируйте репозиторий:
 
    ```sh
-      git clone https://github.com/ваш-пользователь/ваш-репозиторий.git
+      git clone https://github.com/Ilya-Ivashchenk0/image-hosting.git
    ```
 
 2. Заполните файл .env:
